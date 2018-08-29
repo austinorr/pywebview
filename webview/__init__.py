@@ -105,7 +105,7 @@ def _initialize_imports():
                     raise Exception('You must have either QT or GTK with Python extensions installed in order to use pywebview.')
 
         elif platform.system() == 'Windows':
-            if config.gui == 'qt':
+            if config.gui == 'qt' or config.use_qt:
                 try:
                     import webview.qt as gui
                     logger.debug('Using QT')
@@ -120,7 +120,9 @@ def _initialize_imports():
                     logger.exception('PyWin32 cannot be loaded')
                     import_error = True
 
-            if import_error or config.gui != 'win32' and config.gui != 'qt':
+            else:
+                if import_error:
+                    logger.debug('Falling back to default .NET')
                 try:
                     import webview.winforms as gui
                     logger.debug('Using .NET')
